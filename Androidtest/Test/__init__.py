@@ -24,6 +24,7 @@ class ChessAndroidTests(unittest.TestCase):
     def test_start(self):
         "Test the Single Player mode launches correctly"
         print "player"
+        self.driver.launch_app();
         element = self.driver.find_element_by_xpath("//android.widget.TextView[@text='Hello world!']")
         print element.get_attribute("text")
         

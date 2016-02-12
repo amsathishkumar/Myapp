@@ -28,7 +28,9 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_main);
+		DBhelper db = new DBhelper(this);
 		tt = (TextView) findViewById(R.id.textsat);
 		ed1 = (EditText) findViewById(R.id.name);
 		ed2 = (EditText) findViewById(R.id.age);
