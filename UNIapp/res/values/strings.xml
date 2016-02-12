@@ -8,5 +8,8 @@
     <string name="btSave">Save</string>
     <string name="txtname">Name</string>
     <string name="txtage">Age</string>
-    <string name="btExcel">Save To Excel</string>
+    <string name="btView">View</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+    <string name="id">Id</string>
 </resources>

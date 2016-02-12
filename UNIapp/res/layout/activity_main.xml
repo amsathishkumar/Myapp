@@ -16,15 +16,28 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
-    <Button
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/name"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/age"
-        android:layout_marginRight="158dp"
-        android:layout_marginTop="83dp"
-        android:text="@string/btSave" />
+        android:layout_alignLeft="@+id/textsat"
+        android:layout_below="@+id/textsat"
+        android:layout_marginTop="46dp"
+        android:ems="10"
+        android:hint="Name"
+        android:inputType="text"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/ids"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/name"
+        android:layout_below="@+id/textsat"
+        android:layout_marginTop="13dp"
+        android:ems="10"
+        android:hint="@string/id"
+        android:inputType="text" />
 
     <EditText
         android:id="@+id/age"
@@ -32,31 +45,47 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/name"
         android:layout_below="@+id/name"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="15dp"
         android:ems="10"
         android:hint="Age"
         android:inputType="text"
         tools:ignore="HardcodedText" />
 
-    <EditText
-        android:id="@+id/name"
-        android:layout_width="fill_parent"
+    <Button
+        android:id="@+id/view"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textsat"
-        android:layout_marginTop="17dp"
-        android:ems="10"
-        android:hint="Name"
-        android:inputType="text"
-        tools:ignore="HardcodedText" />
+        android:layout_alignLeft="@+id/age"
+        android:layout_below="@+id/age"
+        android:layout_marginTop="38dp"
+        android:text="@string/btView" />
 
     <Button
-        android:id="@+id/savetoexcel"
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/view"
+        android:layout_alignBottom="@+id/view"
+        android:layout_marginLeft="22dp"
+        android:layout_toRightOf="@+id/view"
+        android:text="@string/btSave" />
+
+    <Button
+        android:id="@+id/btUpdate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/save"
         android:layout_alignBottom="@+id/save"
-        android:layout_alignLeft="@+id/age"
-        android:text="@string/btExcel" />
+        android:layout_marginLeft="17dp"
+        android:layout_toRightOf="@+id/save"
+        android:text="@string/update" />
+
+    <Button
+        android:id="@+id/btDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btUpdate"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/btUpdate"
+        android:text="@string/delete" />
 
  </RelativeLayout>
