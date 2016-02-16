@@ -4,8 +4,10 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Properties;
 
+import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -18,15 +20,17 @@ import javax.mail.internet.MimeMessage;
 
 
 
-
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,7 +47,7 @@ public class MainActivity extends ActionBarActivity {
 
 	TextView tt;
 	EditText ed0, ed1, ed2;
-	Button btsave, btview,btupdate,btdelete,btmail;
+	Button btsave, btview, btupdate, btdelete, btmail;
 	DBhelper db;
 
 	@Override
@@ -67,129 +71,135 @@ public class MainActivity extends ActionBarActivity {
 		showAll();
 		updateValue();
 		deleteValue();
-		sendmail();
-		
-
-	}
-    
-	
-	
-	
-	private void sendmail() {btmail.setOnClickListener(new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			sendMail("smuniapp@ciso.com","hai","hai");
-			
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+		    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+		    StrictMode.setThreadPolicy(policy);
 		}
-	});
-		
+		sendmail();
+
 	}
 
-	private void sendMail(String email, String subject, String messageBody) {
-        Session session = createSessionObject();
+	private void sendmail() {
+		btmail.setOnClickListener(new OnClickListener() {
 
-        try {
-            Message message = createMessage(email, subject, messageBody, session);
-            new SendMailTask().execute(message);
-        } catch (AddressException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }
+			@Override
+			public void onClick(View v) {
+				Log.v("status", "" + isOnline());
+				// SMTP server information
+		        String host = "smtp.gmail.com";
+		        String port = "587";
+		        String mailFrom = "amsathishkumar@gmail.com";
+		        String password = "gmailsathish";
+		 
+		        // outgoing message information
+		        String mailTo = "smuniapp@cisco.com";
+		        String subject = "Hello my friend";
+		 
+		        // message contains HTML markups
+		        String message = "<i>Greetings!</i><br>";
+		        message += "<b>Wish you a nice day!</b><br>";
+		        message += "<font color=red>Duke</font>";
+		 
 
-    private Message createMessage(String email, String subject, String messageBody, Session session) throws MessagingException, UnsupportedEncodingException {
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("tutorials@tiemenschut.com", "Tiemen Schut"));
-        message.addRecipient(Message.RecipientType.TO, new InternetAddress(email, email));
-        message.setSubject(subject);
-        message.setText(messageBody);
-        return message;
-    }
+		 
+		        try {
+		           sendHtmlEmail(host, port, mailFrom, password, mailTo,
+		                    subject, message);
+		            System.out.println("Email sent.");
+		        } catch (Exception ex) {
+		            System.out.println("Failed to sent email.");
+		            ex.printStackTrace();
+		        }
 
-    private Session createSessionObject() {
+			}
+		});
+
+	}
+
+	public void sendHtmlEmail(String host, String port,
+            final String userName, final String password, String toAddress,
+            String subject, String message) throws AddressException,
+            MessagingException {
+ 
+        // sets SMTP server properties
         Properties properties = new Properties();
+        properties.put("mail.smtp.host", host);
+        properties.put("mail.smtp.port", port);
         properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.host", "smtp.gmail.com");
-        properties.put("mail.smtp.port", "587");
-
-        return Session.getInstance(properties, new javax.mail.Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("amsathishkumar@gmail.com", "gmailsathish");
+ 
+        // creates a new session with an authenticator
+        Authenticator auth = new Authenticator() {
+            public PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(userName, password);
             }
-        });
+        };
+ 
+        Session session = Session.getInstance(properties, auth);
+ 
+        // creates a new e-mail message
+        Message msg = new MimeMessage(session);
+ 
+        msg.setFrom(new InternetAddress(userName));
+        InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
+        msg.setRecipients(Message.RecipientType.TO, toAddresses);
+        msg.setSubject(subject);
+        msg.setSentDate(new Date());
+        // set plain text message
+        msg.setContent(message, "text/html");
+ 
+        // sends the e-mail
+        Transport.send(msg);
+ 
     }
-
-    private class SendMailTask extends AsyncTask<Message, Void, Void> {
-        private ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(MainActivity.this, "Please wait", "Sending mail", true, false);
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressDialog.dismiss();
-        }
-
-        @Override
-        protected Void doInBackground(Message... messages) {
-            try {
-                Transport.send(messages[0]);
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-    }
+	public boolean isOnline() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+		if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+			return true;
+		}
+		return false;
+	}
 
 	private void deleteValue() {
 		btdelete.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				int s0 = Integer.parseInt(ed0.getText().toString());
-					boolean inserted = db.deleteData(s0);
+				boolean inserted = db.deleteData(s0);
 				if (inserted)
 					Toast.makeText(MainActivity.this, "Data deleted",
 							Toast.LENGTH_LONG).show();
 				else
 					Toast.makeText(MainActivity.this, "Data not delete",
 							Toast.LENGTH_LONG).show();
-				
+
 			}
 		});
-		
+
 	}
 
 	private void updateValue() {
 		btupdate.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				int s0 = Integer.parseInt(ed0.getText().toString());
 				String s1 = ed1.getText().toString();
 				String s2 = ed2.getText().toString();
-				boolean inserted =db.updateData(s0, s1, Integer.parseInt(s2));
-				 
+				boolean inserted = db.updateData(s0, s1, Integer.parseInt(s2));
+
 				if (inserted)
 					Toast.makeText(MainActivity.this, "Data Update",
 							Toast.LENGTH_LONG).show();
 				else
 					Toast.makeText(MainActivity.this, "Data not updated",
 							Toast.LENGTH_LONG).show();
-				
+
 			}
 		});
-		
+
 	}
 
 	private void showAll() {
