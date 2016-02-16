@@ -14,6 +14,7 @@ public class DBhelper extends SQLiteOpenHelper{
     final static String COL1="ID";
     final static String COL2="NAME";
     final static String COL3="AGE";
+    final static String COL4="EMAIL";
 	@SuppressLint("NewApi")
 	public DBhelper(Context context) {
 		super(context, DBNAME, null,1);
@@ -23,7 +24,7 @@ public class DBhelper extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-		db.execSQL("create table "+TABLENAME +"("+COL1+" INTEGER, "+COL2+" TEXT, "+COL3+" INTEGER)");
+		db.execSQL("create table "+TABLENAME +"("+COL1+" INTEGER, "+COL2+" TEXT, "+COL3+" INTEGER,"+ COL4+" TEXT)");
 		
 	}
 
@@ -33,12 +34,14 @@ public class DBhelper extends SQLiteOpenHelper{
 		// TODO Auto-generated method stub
 		onCreate(db);
 	}
-	public boolean insertData(int id, String name,int age){
+	public boolean insertData(int id, String name,int age,String email){
 		SQLiteDatabase db=this.getWritableDatabase();	
 		ContentValues cv = new ContentValues();
 		cv.put("id", id);
 		cv.put("name", name);
 		cv.put("age", age);
+		cv.put("email", email);
+		
 		long result=db.insert(TABLENAME, null,cv);
 		if (result==-1)
 			return false;
@@ -53,12 +56,13 @@ public class DBhelper extends SQLiteOpenHelper{
 		return res;
 	}
 	
-	public boolean updateData(int id, String name,int age){
+	public boolean updateData(int id, String name,int age, String email){
 		SQLiteDatabase db=this.getWritableDatabase();	
 		ContentValues cv = new ContentValues();
 		cv.put("id", id);
 		cv.put("name", name);
 		cv.put("age", age);
+		cv.put("email", email);
 		long result=db.update(TABLENAME,cv,"ID = ?", new String[] {String.valueOf(id)});
 		if (result==-1)
 			return false;

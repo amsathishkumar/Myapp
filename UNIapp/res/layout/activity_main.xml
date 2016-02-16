@@ -87,14 +87,34 @@
         android:layout_toRightOf="@+id/view"
         android:text="@string/btSave" />
 
+    <EditText
+        android:id="@+id/editrmail"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/save"
+        android:layout_alignLeft="@+id/age"
+        android:ems="10"
+        android:hint="sat@sat.com"
+        android:inputType="textEmailAddress" >
+
+        <requestFocus />
+    </EditText>
+
     <Button
         android:id="@+id/btmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/btDelete"
-        android:layout_below="@+id/btDelete"
-        android:layout_marginRight="48dp"
-        android:layout_marginTop="41dp"
+        android:layout_below="@+id/btUpdate"
+        android:layout_marginTop="34dp"
+        android:layout_toLeftOf="@+id/btDelete"
         android:text="Mail" />
+
+    <Button
+        android:id="@+id/btclear"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btmail"
+        android:layout_alignLeft="@+id/btDelete"
+        android:text="Clear" />
 
  </RelativeLayout>

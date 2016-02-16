@@ -17,9 +17,6 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-
-
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -46,8 +43,8 @@ import com.example.app1.R;
 public class MainActivity extends ActionBarActivity {
 
 	TextView tt;
-	EditText ed0, ed1, ed2;
-	Button btsave, btview, btupdate, btdelete, btmail;
+	EditText ed0, ed1, ed2, edmail;
+	Button btsave, btview, btupdate, btdelete, btmail, btclear;
 	DBhelper db;
 
 	@Override
@@ -55,30 +52,56 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
+		if (android.os.Build.VERSION.SDK_INT > 9) {
+			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+					.permitAll().build();
+			StrictMode.setThreadPolicy(policy);
+		}
+
 		db = new DBhelper(this);
+
 		tt = (TextView) findViewById(R.id.textsat);
 		ed0 = (EditText) findViewById(R.id.ids);
 		ed1 = (EditText) findViewById(R.id.name);
 		ed2 = (EditText) findViewById(R.id.age);
+		edmail = (EditText) findViewById(R.id.editrmail);
+
 		btsave = (Button) findViewById(R.id.save);
 		btview = (Button) findViewById(R.id.view);
 		btupdate = (Button) findViewById(R.id.btUpdate);
 		btdelete = (Button) findViewById(R.id.btDelete);
 		btmail = (Button) findViewById(R.id.btmail);
+		btclear = (Button) findViewById(R.id.btclear);
+
 		tt.setText(R.string.sat1);
 
 		clickSave();
 		showAll();
 		updateValue();
 		deleteValue();
-		if (android.os.Build.VERSION.SDK_INT > 9) {
-		    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-		    StrictMode.setThreadPolicy(policy);
-		}
+		clearAll();
 		sendmail();
 
 	}
 
+	private void clearAll() {
+		btclear.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				clear();
+				
+			}
+		});
+
+
+	}
+private void clear(){
+	ed0.setText("");
+	ed1.setText("");
+	ed2.setText("");
+	edmail.setText("");
+}
 	private void sendmail() {
 		btmail.setOnClickListener(new OnClickListener() {
 
@@ -86,72 +109,34 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				Log.v("status", "" + isOnline());
 				// SMTP server information
-		        String host = "smtp.gmail.com";
-		        String port = "587";
-		        String mailFrom = "amsathishkumar@gmail.com";
-		        String password = "gmailsathish";
-		 
-		        // outgoing message information
-		        String mailTo = "smuniapp@cisco.com";
-		        String subject = "Hello my friend";
-		 
-		        // message contains HTML markups
-		        String message = "<i>Greetings!</i><br>";
-		        message += "<b>Wish you a nice day!</b><br>";
-		        message += "<font color=red>Duke</font>";
-		 
+				String mailFrom = "amsathishkumar@gmail.com";
+				String password = "gmailsathish";
 
-		 
-		        try {
-		           sendHtmlEmail(host, port, mailFrom, password, mailTo,
-		                    subject, message);
-		            System.out.println("Email sent.");
-		        } catch (Exception ex) {
-		            System.out.println("Failed to sent email.");
-		            ex.printStackTrace();
-		        }
+				// outgoing message information
+				String mailTo = edmail.getText().toString();
+
+				String subject = "Hello my friend";
+
+				// message contains HTML markups
+				String message = "<i>Greetings!</i><br>";
+				message += "<b>Wish you a nice day!</b><br>";
+				message += "<font color=red>From Sathish Kumar</font>";
+
+				try {
+					GMailhelper gh = new GMailhelper();
+					gh.sendHtmlEmail(mailFrom, password, mailTo,
+							subject, message);
+					System.out.println("Email sent.");
+				} catch (Exception ex) {
+					System.out.println("Failed to sent email.");
+					ex.printStackTrace();
+				}
 
 			}
 		});
 
 	}
 
-	public void sendHtmlEmail(String host, String port,
-            final String userName, final String password, String toAddress,
-            String subject, String message) throws AddressException,
-            MessagingException {
- 
-        // sets SMTP server properties
-        Properties properties = new Properties();
-        properties.put("mail.smtp.host", host);
-        properties.put("mail.smtp.port", port);
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
- 
-        // creates a new session with an authenticator
-        Authenticator auth = new Authenticator() {
-            public PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(userName, password);
-            }
-        };
- 
-        Session session = Session.getInstance(properties, auth);
- 
-        // creates a new e-mail message
-        Message msg = new MimeMessage(session);
- 
-        msg.setFrom(new InternetAddress(userName));
-        InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
-        msg.setRecipients(Message.RecipientType.TO, toAddresses);
-        msg.setSubject(subject);
-        msg.setSentDate(new Date());
-        // set plain text message
-        msg.setContent(message, "text/html");
- 
-        // sends the e-mail
-        Transport.send(msg);
- 
-    }
 	public boolean isOnline() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -188,7 +173,10 @@ public class MainActivity extends ActionBarActivity {
 				int s0 = Integer.parseInt(ed0.getText().toString());
 				String s1 = ed1.getText().toString();
 				String s2 = ed2.getText().toString();
-				boolean inserted = db.updateData(s0, s1, Integer.parseInt(s2));
+				String s3 = edmail.getText().toString();
+
+				boolean inserted = db.updateData(s0, s1, Integer.parseInt(s2),
+						s3);
 
 				if (inserted)
 					Toast.makeText(MainActivity.this, "Data Update",
@@ -203,9 +191,7 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	private void showAll() {
-		// TODO Auto-generated method stub
 		btview.setOnClickListener(new OnClickListener() {
-
 			@Override
 			public void onClick(View v) {
 
@@ -241,13 +227,15 @@ public class MainActivity extends ActionBarActivity {
 				int s0 = Integer.parseInt(ed0.getText().toString());
 				String s1 = ed1.getText().toString();
 				String s2 = ed2.getText().toString();
-
+				String s3 = edmail.getText().toString();
 				// saveFile("sathish", s1 + "," + s2 + ";");
-				boolean inserted = db.insertData(s0, s1, Integer.parseInt(s2));
-				if (inserted)
+				boolean inserted = db.insertData(s0, s1, Integer.parseInt(s2),
+						s3);
+				if (inserted) {
 					Toast.makeText(MainActivity.this, "Data inserted",
 							Toast.LENGTH_LONG).show();
-				else
+					clearAll();
+				} else
 					Toast.makeText(MainActivity.this, "Data not inserted",
 							Toast.LENGTH_LONG).show();
 
