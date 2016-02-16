@@ -3,10 +3,28 @@ package com.example.app1;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+
+
+
+
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -25,7 +43,7 @@ public class MainActivity extends ActionBarActivity {
 
 	TextView tt;
 	EditText ed0, ed1, ed2;
-	Button btsave, btview,btupdate,btdelete;
+	Button btsave, btview,btupdate,btdelete,btmail;
 	DBhelper db;
 
 	@Override
@@ -42,16 +60,97 @@ public class MainActivity extends ActionBarActivity {
 		btview = (Button) findViewById(R.id.view);
 		btupdate = (Button) findViewById(R.id.btUpdate);
 		btdelete = (Button) findViewById(R.id.btDelete);
-		
+		btmail = (Button) findViewById(R.id.btmail);
 		tt.setText(R.string.sat1);
 
 		clickSave();
 		showAll();
 		updateValue();
 		deleteValue();
+		sendmail();
+		
 
 	}
     
+	
+	
+	
+	private void sendmail() {btmail.setOnClickListener(new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			sendMail("smuniapp@ciso.com","hai","hai");
+			
+		}
+	});
+		
+	}
+
+	private void sendMail(String email, String subject, String messageBody) {
+        Session session = createSessionObject();
+
+        try {
+            Message message = createMessage(email, subject, messageBody, session);
+            new SendMailTask().execute(message);
+        } catch (AddressException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Message createMessage(String email, String subject, String messageBody, Session session) throws MessagingException, UnsupportedEncodingException {
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress("tutorials@tiemenschut.com", "Tiemen Schut"));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(email, email));
+        message.setSubject(subject);
+        message.setText(messageBody);
+        return message;
+    }
+
+    private Session createSessionObject() {
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.host", "smtp.gmail.com");
+        properties.put("mail.smtp.port", "587");
+
+        return Session.getInstance(properties, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication("amsathishkumar@gmail.com", "gmailsathish");
+            }
+        });
+    }
+
+    private class SendMailTask extends AsyncTask<Message, Void, Void> {
+        private ProgressDialog progressDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(MainActivity.this, "Please wait", "Sending mail", true, false);
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+        }
+
+        @Override
+        protected Void doInBackground(Message... messages) {
+            try {
+                Transport.send(messages[0]);
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+    }
+
 	private void deleteValue() {
 		btdelete.setOnClickListener(new OnClickListener() {
 			

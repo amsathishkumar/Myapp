@@ -60,26 +60,6 @@
         android:text="@string/btView" />
 
     <Button
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/view"
-        android:layout_alignBottom="@+id/view"
-        android:layout_marginLeft="22dp"
-        android:layout_toRightOf="@+id/view"
-        android:text="@string/btSave" />
-
-    <Button
-        android:id="@+id/btUpdate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/save"
-        android:layout_alignBottom="@+id/save"
-        android:layout_marginLeft="17dp"
-        android:layout_toRightOf="@+id/save"
-        android:text="@string/update" />
-
-    <Button
         android:id="@+id/btDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -87,5 +67,34 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/btUpdate"
         android:text="@string/delete" />
+
+    <Button
+        android:id="@+id/btUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/view"
+        android:layout_marginTop="24dp"
+        android:layout_toLeftOf="@+id/save"
+        android:text="@string/update" />
+
+    <Button
+        android:id="@+id/save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/view"
+        android:layout_alignBottom="@+id/view"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/view"
+        android:text="@string/btSave" />
+
+    <Button
+        android:id="@+id/btmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/btDelete"
+        android:layout_below="@+id/btDelete"
+        android:layout_marginRight="48dp"
+        android:layout_marginTop="41dp"
+        android:text="Mail" />
 
  </RelativeLayout>
