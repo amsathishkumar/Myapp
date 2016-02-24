@@ -20,6 +20,8 @@ import javax.mail.internet.MimeMessage;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -42,16 +44,26 @@ import com.example.app1.R;
 
 public class MainActivity extends ActionBarActivity {
 
+	public static final String MyPREFERENCES = "satPrefs";
+
 	TextView tt;
 	EditText ed0, ed1, ed2, edmail;
 	Button btsave, btview, btupdate, btdelete, btmail, btclear;
 	DBhelper db;
+
+	SharedPreferences sharedpreferences;
+
+	public static final String Id = "idKey";
+	public static final String Name = "nameKey";
+	public static final String Age = "ageKey";
+	public static final String Email = "emailKey";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
+		//for gmail
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
@@ -71,42 +83,65 @@ public class MainActivity extends ActionBarActivity {
 		btupdate = (Button) findViewById(R.id.btUpdate);
 		btdelete = (Button) findViewById(R.id.btDelete);
 		btmail = (Button) findViewById(R.id.btmail);
-		btclear = (Button) findViewById(R.id.btclear);
+		btclear = (Button) findViewById(R.id.btclear);		
 
-		tt.setText(R.string.sat1);
+		sharedpreferences = getSharedPreferences(MyPREFERENCES,
+				Context.MODE_PRIVATE);
+        if (sharedpreferences.getAll().size()>0)
+        {
+        	try{
+        	tt.setText("Sat Prefered"+sharedpreferences.getAll().toString());
+        	
+    		ed1.setText(sharedpreferences.getString(Name, null));
+    		ed0.setText(String.valueOf(sharedpreferences.getInt(Id, 0)));
 
+    		ed2.setText(String.valueOf(sharedpreferences.getInt(Age, 0)));    		
+    		edmail.setText(sharedpreferences.getString(Email, null));
+        	}
+        	catch(Exception e){
+        		Log.v("shared","error");
+        	}
+        	
+        }
+        else
+        	tt.setText(R.string.sat1);
+        	
 		clickSave();
 		showAll();
 		updateValue();
 		deleteValue();
 		clearAll();
 		sendmail();
-
 	}
 
 	private void clearAll() {
 		btclear.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				clear();
-				
+
 			}
 		});
 
-
 	}
-private void clear(){
-	ed0.setText("");
-	ed1.setText("");
-	ed2.setText("");
-	edmail.setText("");
-}
+
+	private void clear() {
+		ed0.setText("");
+		ed1.setText("");
+		ed2.setText("");
+		edmail.setText("");
+	}
+
 	private void sendmail() {
 		btmail.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+
+				Intent in = new Intent(MainActivity.this, SatActivity.class);
+
+				startActivity(in);
 				Log.v("status", "" + isOnline());
 				// SMTP server information
 				String mailFrom = "amsathishkumar@gmail.com";
@@ -124,8 +159,8 @@ private void clear(){
 
 				try {
 					GMailhelper gh = new GMailhelper();
-					gh.sendHtmlEmail(mailFrom, password, mailTo,
-							subject, message);
+					gh.sendHtmlEmail(mailFrom, password, mailTo, subject,
+							message);
 					System.out.println("Email sent.");
 				} catch (Exception ex) {
 					System.out.println("Failed to sent email.");
@@ -198,9 +233,10 @@ private void clear(){
 				Cursor res = db.getallData();
 				StringBuffer sb = new StringBuffer();
 				while (res.moveToNext()) {
-					sb.append("ID" + res.getInt(0) + "\n");
-					sb.append("NAME" + res.getString(1) + "\n");
-					sb.append("AGE" + res.getInt(2) + "\n\n");
+					sb.append("ID   :" + res.getInt(0) + "\n");
+					sb.append("NAME :" + res.getString(1) + "\n");
+					sb.append("AGE  :" + res.getInt(2) + "\n\n");
+					sb.append("EMAIL:" + res.getString(3) + "\n\n");
 
 				}
 				showMessage("student", sb.toString());
@@ -231,10 +267,21 @@ private void clear(){
 				// saveFile("sathish", s1 + "," + s2 + ";");
 				boolean inserted = db.insertData(s0, s1, Integer.parseInt(s2),
 						s3);
+
+				SharedPreferences.Editor editor = sharedpreferences.edit();
+
+				editor.putInt(Id, s0);
+				editor.putString(Name, s1);
+				editor.putInt(Age, Integer.parseInt(s2));
+				editor.putString(Email, s3);
+				editor.commit();
+				Toast.makeText(MainActivity.this, "Thanks", Toast.LENGTH_LONG)
+						.show();
+
 				if (inserted) {
 					Toast.makeText(MainActivity.this, "Data inserted",
 							Toast.LENGTH_LONG).show();
-					clearAll();
+					// clearAll();
 				} else
 					Toast.makeText(MainActivity.this, "Data not inserted",
 							Toast.LENGTH_LONG).show();
@@ -251,7 +298,6 @@ private void clear(){
 
 			fos.write(ss.getBytes());
 			fos.close();
-			System.out.println("sathish");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

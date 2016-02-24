@@ -1,0 +1,14 @@
+configparser
+Appium-Python-Client
+bunch
+pytest
+pytz
+python-dateutil
+python-jsonrpc
+requests
+setuptools
+web.py
+enum
+enum34
+suds==0.4
+pytest-repeat
