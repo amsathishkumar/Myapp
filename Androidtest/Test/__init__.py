@@ -2,6 +2,7 @@ import os
 import unittest
 from appium import webdriver
 from time import sleep
+
 "http://qxf2.com/blog/appium-mobile-automation/"
 class ChessAndroidTests(unittest.TestCase):
     "Class to run tests against the Chess Free app"
@@ -15,6 +16,7 @@ class ChessAndroidTests(unittest.TestCase):
         ds['appPackage'] = 'com.example.test'
         ds['appActivity'] = '.MainActivity'
         self.driver = webdriver.Remote('http://localhost:4723/wd/hub', ds)
+
  
     def tearDown(self):
         "Tear down the test"
