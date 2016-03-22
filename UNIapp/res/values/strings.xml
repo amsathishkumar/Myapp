@@ -13,5 +13,8 @@
     <string name="update">Update</string>
     <string name="id">Id</string>
     <string name="title_activity_sat">SatActivity</string>
+    <string name="sat_sat_com">sat@sat.com</string>
+    <string name="mail">Mail</string>
+    <string name="clear">Clear</string>
 
 </resources>

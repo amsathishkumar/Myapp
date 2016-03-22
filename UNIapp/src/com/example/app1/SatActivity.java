@@ -17,7 +17,7 @@ public class SatActivity extends ActionBarActivity {
 		
 		setContentView(R.layout.activity_sat);
 		sharedpreferences=getSharedPreferences("satPrefs", Context.MODE_PRIVATE);
-		Toast.makeText(SatActivity.this, sharedpreferences.getString("Email", "sat@sat.com"),
+		Toast.makeText(SatActivity.this, sharedpreferences.getString("Email", getString(R.string.sat_sat_com)),
 				Toast.LENGTH_LONG).show();
 		
 	}
