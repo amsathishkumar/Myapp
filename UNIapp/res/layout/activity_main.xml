@@ -80,26 +80,24 @@
         android:text="@string/delete" />
 
     <Button
-        android:id="@+id/btclear"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btmail"
-        android:text="@string/clear" />
-
-    <Button
         android:id="@+id/btUpdate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btDelete"
-        android:layout_below="@+id/btDelete"
+        android:layout_below="@id/btDelete"
         android:text="@string/update" />
 
     <Button
         android:id="@+id/btmail"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btUpdate"
-        android:layout_below="@+id/btUpdate"
+        android:layout_below="@id/btUpdate"
         android:text="@string/mail" />
+
+    <Button
+        android:id="@+id/btclear"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btmail"
+        android:text="@string/clear" />
 
  </RelativeLayout>
