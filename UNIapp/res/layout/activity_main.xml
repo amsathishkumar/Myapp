@@ -7,14 +7,14 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.app1.MainActivity"
+    tools:context="com.sat.info.MainActivity"
     tools:ignore="RtlHardcoded" >
 
     <TextView
         android:id="@+id/textsat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="@string/info" />
 
     <EditText
         android:id="@+id/ids"
@@ -56,7 +56,7 @@
         android:inputType="textEmailAddress" />
 
     <Button
-        android:id="@+id/view"
+        android:id="@+id/btview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/editrmail"
@@ -64,40 +64,40 @@
         android:text="@string/btView" />
 
     <Button
-        android:id="@+id/save"
+        android:id="@+id/btsave"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/view"
-        android:layout_below="@id/view"
+        android:layout_alignLeft="@+id/btview"
+        android:layout_below="@id/btview"
         android:text="@string/btSave" />
 
     <Button
         android:id="@+id/btDelete"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/save"
-        android:layout_below="@id/save"
-        android:text="@string/delete" />
+        android:layout_alignLeft="@+id/btsave"
+        android:layout_below="@id/btsave"
+        android:text="@string/btdelete" />
 
     <Button
         android:id="@+id/btUpdate"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btDelete"
-        android:text="@string/update" />
+        android:text="@string/btupdate" />
 
     <Button
         android:id="@+id/btmail"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btUpdate"
-        android:text="@string/mail" />
+        android:text="@string/btmail" />
 
     <Button
         android:id="@+id/btclear"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/btmail"
-        android:text="@string/clear" />
+        android:text="@string/btclear" />
 
  </RelativeLayout>

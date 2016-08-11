@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE resources [
+<!ENTITY otherFile SYSTEM "sat_value.xml">
+<!ENTITY otherFile SYSTEM "sat_dict.xml">
+]>
 <resources>
 
-    <string name="app_name">UNIapp</string>
-    <string name="hello_world">Hello world!</string>
+    
+    <string name="info">Hello SAT!</string>
     <string name="action_settings">Settings</string>
     <string name="sat1">sathish</string>
-    <string name="btSave">Save</string>
+    
     <string name="txtname">Name</string>
     <string name="txtage">Age</string>
-    <string name="btView">View</string>
-    <string name="delete">Delete</string>
-    <string name="update">Update</string>
+
     <string name="id">Id</string>
     <string name="title_activity_sat">SatActivity</string>
     <string name="sat_sat_com">sat@sat.com</string>
-    <string name="mail">Mail</string>
-    <string name="clear">Clear</string>
+
+    
+    <string name="mailto">amsathishkumar@gmail.com</string>
+    <string name="mailtopwd">"suvitha0504"</string>
+    <string name="perf_name_shared">satPrefs</string>
+    
 
 </resources>

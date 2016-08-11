@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="btSave">Save</string>
+    <string name="btView">View</string>
+    <string name="btdelete">Delete</string>
+    <string name="btupdate">Update</string>
+    <string name="btmail">Mail</string>
+    <string name="btclear">Clear</string>
+</resources>  

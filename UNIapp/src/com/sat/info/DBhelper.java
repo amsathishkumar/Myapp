@@ -1,4 +1,4 @@
-package com.example.app1;
+package com.sat.info;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;

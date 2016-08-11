@@ -1,5 +1,5 @@
 /** Automatically generated file. DO NOT MODIFY */
-package com.example.app1;
+package com.sat.info;
 
 public final class BuildConfig {
     public final static boolean DEBUG = true;

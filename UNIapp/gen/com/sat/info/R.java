@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package com.example.app1;
+package com.sat.info;
 
 public final class R {
     public static final class attr {
@@ -31,12 +31,12 @@ public final class R {
         public static final int btUpdate=0x7f080008;
         public static final int btclear=0x7f08000a;
         public static final int btmail=0x7f080009;
+        public static final int btsave=0x7f080006;
+        public static final int btview=0x7f080005;
         public static final int editrmail=0x7f080004;
         public static final int ids=0x7f080001;
         public static final int name=0x7f080002;
-        public static final int save=0x7f080006;
         public static final int textsat=0x7f080000;
-        public static final int view=0x7f080005;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -47,23 +47,26 @@ public final class R {
         public static final int sat=0x7f070001;
     }
     public static final class string {
-        public static final int action_settings=0x7f050002;
-        public static final int age=0x7f050010;
-        public static final int app_name=0x7f050000;
-        public static final int btSave=0x7f050004;
-        public static final int btView=0x7f050007;
-        public static final int clear=0x7f05000e;
-        public static final int delete=0x7f050008;
-        public static final int hello_world=0x7f050001;
-        public static final int id=0x7f05000a;
-        public static final int mail=0x7f05000d;
-        public static final int name=0x7f05000f;
-        public static final int sat1=0x7f050003;
-        public static final int sat_sat_com=0x7f05000c;
-        public static final int title_activity_sat=0x7f05000b;
-        public static final int txtage=0x7f050006;
-        public static final int txtname=0x7f050005;
-        public static final int update=0x7f050009;
+        public static final int action_settings=0x7f050008;
+        public static final int age=0x7f050013;
+        public static final int application_name=0x7f050006;
+        public static final int btSave=0x7f050000;
+        public static final int btView=0x7f050001;
+        public static final int btclear=0x7f050005;
+        public static final int btdelete=0x7f050002;
+        public static final int btmail=0x7f050004;
+        public static final int btupdate=0x7f050003;
+        public static final int id=0x7f05000c;
+        public static final int info=0x7f050007;
+        public static final int mailto=0x7f05000f;
+        public static final int mailtopwd=0x7f050010;
+        public static final int name=0x7f050012;
+        public static final int perf_name_shared=0x7f050011;
+        public static final int sat1=0x7f050009;
+        public static final int sat_sat_com=0x7f05000e;
+        public static final int title_activity_sat=0x7f05000d;
+        public static final int txtage=0x7f05000b;
+        public static final int txtname=0x7f05000a;
     }
     public static final class style {
         /** 

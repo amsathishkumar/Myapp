@@ -1,5 +1,7 @@
-package com.example.app1;
+package com.sat.info;
 
+
+import com.sat.info.R;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,14 +13,14 @@ import android.widget.Toast;
 
 public class SatActivity extends Activity {
 
-	SharedPreferences sharedpreferences;
+	SharedPreferences satsharedpreferences;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_sat);
-		sharedpreferences=getSharedPreferences("satPrefs", Context.MODE_PRIVATE);
-		Toast.makeText(SatActivity.this, sharedpreferences.getString("Email", getString(R.string.sat_sat_com)),
+		satsharedpreferences=getSharedPreferences(getResources().getString(R.string.perf_name_shared), Context.MODE_PRIVATE);
+		Toast.makeText(SatActivity.this, satsharedpreferences.getString("emailKey", getString(R.string.sat_sat_com)),
 				Toast.LENGTH_LONG).show();
 		
 	}

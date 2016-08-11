@@ -1,4 +1,4 @@
-package com.example.app1;
+package com.sat.info;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,6 +16,8 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import com.sat.info.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -44,7 +46,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	public static final String MyPREFERENCES = "satPrefs";
+	//public static final String MyPREFERENCES = "satPrefs";
 
 	TextView tt;
 	EditText ed0, ed1, ed2, edmail;
@@ -78,14 +80,14 @@ public class MainActivity extends Activity {
 		ed2 = (EditText) findViewById(R.id.age);
 		edmail = (EditText) findViewById(R.id.editrmail);
 
-		btsave = (Button) findViewById(R.id.save);
-		btview = (Button) findViewById(R.id.view);
+		btsave = (Button) findViewById(R.id.btsave);
+		btview = (Button) findViewById(R.id.btview);
 		btupdate = (Button) findViewById(R.id.btUpdate);
 		btdelete = (Button) findViewById(R.id.btDelete);
 		btmail = (Button) findViewById(R.id.btmail);
 		btclear = (Button) findViewById(R.id.btclear);		
 
-		sharedpreferences = getSharedPreferences(MyPREFERENCES,
+		sharedpreferences = getSharedPreferences(getResources().getString(R.string.perf_name_shared),
 				Context.MODE_PRIVATE);
         if (sharedpreferences.getAll().size()>0)
         {
@@ -143,13 +145,11 @@ public class MainActivity extends Activity {
 
 				startActivity(in);
 				Log.v("status", "" + isOnline());
-				// SMTP server information
-				String mailFrom = "amsathishkumar@gmail.com";
-				String password = "gmailsathish";
 
 				// outgoing message information
-				String mailTo = edmail.getText().toString();
-
+				//String mailTo = edmail.getText().toString();
+				String mailTo=sharedpreferences.getString(Email, null);
+				
 				String subject = "Hello my friend";
 
 				// message contains HTML markups
@@ -159,7 +159,7 @@ public class MainActivity extends Activity {
 
 				try {
 					GMailhelper gh = new GMailhelper();
-					gh.sendHtmlEmail(mailFrom, password, mailTo, subject,
+					gh.sendHtmlEmail(getResources().getString(R.string.mailto), getResources().getString(R.string.mailtopwd), mailTo, subject,
 							message);
 					System.out.println("Email sent.");
 				} catch (Exception ex) {
