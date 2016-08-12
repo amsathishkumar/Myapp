@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Properties;
 
 import javax.mail.Authenticator;
@@ -230,16 +231,26 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				Cursor res = db.getallData();
-				StringBuffer sb = new StringBuffer();
-				while (res.moveToNext()) {
-					sb.append("ID   :" + res.getInt(0) + "\n");
-					sb.append("NAME :" + res.getString(1) + "\n");
-					sb.append("AGE  :" + res.getInt(2) + "\n\n");
-					sb.append("EMAIL:" + res.getString(3) + "\n\n");
-
-				}
-				showMessage("student", sb.toString());
+//				Cursor res = db.getallData();
+//				StringBuffer sb = new StringBuffer();
+//				while (res.moveToNext()) {
+//					sb.append("ID   :" + res.getInt(0) + "\n");
+//					sb.append("NAME :" + res.getString(1) + "\n");
+//					sb.append("AGE  :" + res.getInt(2) + "\n\n");
+//					sb.append("EMAIL:" + res.getString(3) + "\n\n");
+//
+//				}
+//				showMessage("student", sb.toString());
+				ResHelper reshelp =  new ResHelper();
+				LinkedHashMap <String,String> vals= new LinkedHashMap <String,String>();
+				vals= reshelp.satjson1();
+				
+				System.out.println("satjson"+vals);
+				ed0.setText(String.valueOf(vals.get("id")));
+				ed1.setText(vals.get("name"));
+		    	ed2.setText(String.valueOf(vals.get("age")));    		
+	    		edmail.setText(vals.get("mail"));
+				
 
 			}
 		});
