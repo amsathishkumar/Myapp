@@ -1,4 +1,4 @@
-package com.sat.info;
+package com.sat.mail;
 
 import java.util.Date;
 import java.util.Properties;

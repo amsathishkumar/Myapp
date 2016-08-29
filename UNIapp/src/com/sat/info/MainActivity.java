@@ -18,7 +18,10 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.sat.db.DBhelper;
 import com.sat.info.R;
+import com.sat.mail.GMailhelper;
+import com.sat.rest.ResHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;

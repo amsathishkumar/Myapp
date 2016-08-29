@@ -1,4 +1,4 @@
-package com.sat.info;
+package com.sat.rest;
 
 import java.io.BufferedReader;
 import java.io.IOException;
