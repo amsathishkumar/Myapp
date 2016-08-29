@@ -3,54 +3,39 @@ package com.sat.info;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.Properties;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-
-import com.sat.db.DBhelper;
-import com.sat.info.R;
-import com.sat.mail.GMailhelper;
-import com.sat.rest.ResHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
+import com.sat.db.DBhelper;
+import com.sat.mail.GMailhelper;
+import com.sat.rest.ResHelper;
 
 public class MainActivity extends Activity {
 
-	//public static final String MyPREFERENCES = "satPrefs";
+	// public static final String MyPREFERENCES = "satPrefs";
 
 	TextView tt;
 	EditText ed0, ed1, ed2, edmail;
@@ -63,13 +48,15 @@ public class MainActivity extends Activity {
 	public static final String Name = "nameKey";
 	public static final String Age = "ageKey";
 	public static final String Email = "emailKey";
+	public static int numMessages = 0;
+	public static int notificationID = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.activity_main);
-		//for gmail
+		// for gmail
 		if (android.os.Build.VERSION.SDK_INT > 9) {
 			StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
 					.permitAll().build();
@@ -89,29 +76,28 @@ public class MainActivity extends Activity {
 		btupdate = (Button) findViewById(R.id.btUpdate);
 		btdelete = (Button) findViewById(R.id.btDelete);
 		btmail = (Button) findViewById(R.id.btmail);
-		btclear = (Button) findViewById(R.id.btclear);		
+		btclear = (Button) findViewById(R.id.btclear);
 
-		sharedpreferences = getSharedPreferences(getResources().getString(R.string.perf_name_shared),
+		sharedpreferences = getSharedPreferences(
+				getResources().getString(R.string.perf_name_shared),
 				Context.MODE_PRIVATE);
-        if (sharedpreferences.getAll().size()>0)
-        {
-        	try{
-        	tt.setText("Sat Prefered"+sharedpreferences.getAll().toString());
-        	
-    		ed1.setText(sharedpreferences.getString(Name, null));
-    		ed0.setText(String.valueOf(sharedpreferences.getInt(Id, 0)));
+		if (sharedpreferences.getAll().size() > 0) {
+			try {
+				tt.setText("Sat Prefered"
+						+ sharedpreferences.getAll().toString());
 
-    		ed2.setText(String.valueOf(sharedpreferences.getInt(Age, 0)));    		
-    		edmail.setText(sharedpreferences.getString(Email, null));
-        	}
-        	catch(Exception e){
-        		Log.v("shared","error");
-        	}
-        	
-        }
-        else
-        	tt.setText(R.string.sat1);
-        	
+				ed1.setText(sharedpreferences.getString(Name, null));
+				ed0.setText(String.valueOf(sharedpreferences.getInt(Id, 0)));
+
+				ed2.setText(String.valueOf(sharedpreferences.getInt(Age, 0)));
+				edmail.setText(sharedpreferences.getString(Email, null));
+			} catch (Exception e) {
+				Log.v("shared", "error");
+			}
+
+		} else
+			tt.setText(R.string.sat1);
+
 		clickSave();
 		showAll();
 		updateValue();
@@ -151,9 +137,9 @@ public class MainActivity extends Activity {
 				Log.v("status", "" + isOnline());
 
 				// outgoing message information
-				//String mailTo = edmail.getText().toString();
-				String mailTo=sharedpreferences.getString(Email, null);
-				
+				// String mailTo = edmail.getText().toString();
+				String mailTo = sharedpreferences.getString(Email, null);
+
 				String subject = "Hello my friend";
 
 				// message contains HTML markups
@@ -163,8 +149,9 @@ public class MainActivity extends Activity {
 
 				try {
 					GMailhelper gh = new GMailhelper();
-					gh.sendHtmlEmail(getResources().getString(R.string.mailto), getResources().getString(R.string.mailtopwd), mailTo, subject,
-							message);
+					gh.sendHtmlEmail(getResources().getString(R.string.mailto),
+							getResources().getString(R.string.mailtopwd),
+							mailTo, subject, message);
 					System.out.println("Email sent.");
 				} catch (Exception ex) {
 					System.out.println("Failed to sent email.");
@@ -217,10 +204,12 @@ public class MainActivity extends Activity {
 				boolean inserted = db.updateData(s0, s1, Integer.parseInt(s2),
 						s3);
 
-				if (inserted)
+				if (inserted) {
 					Toast.makeText(MainActivity.this, "Data Update",
 							Toast.LENGTH_LONG).show();
-				else
+					//Notify("You've received new message", s3);
+					displayNotification();
+				} else
 					Toast.makeText(MainActivity.this, "Data not updated",
 							Toast.LENGTH_LONG).show();
 
@@ -229,31 +218,99 @@ public class MainActivity extends Activity {
 
 	}
 
+	private void Notify(String notificationTitle, String notificationMessage) {
+		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		@SuppressWarnings("deprecation")
+		Notification notification = new Notification(R.drawable.ic_launcher,
+				"New Message", System.currentTimeMillis());
+		Intent notificationIntent = new Intent(this, NotificationView.class);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+				notificationIntent, 0);
+
+		notification.setLatestEventInfo(MainActivity.this, notificationTitle,
+				notificationMessage, pendingIntent);
+		notificationManager.notify(9999, notification);
+	}
+
+	protected void displayNotification() {
+		Log.i("Start", "notification");
+
+		/* Invoking the default notification service */
+		NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
+				this);
+
+		mBuilder.setContentTitle("New Message");
+		mBuilder.setContentText("You've received new message."+notificationID);
+		mBuilder.setTicker("New Message Alert!");
+		mBuilder.setSmallIcon(R.drawable.ic_launcher);
+
+		/* Increase notification number every time a new notification arrives */
+		mBuilder.setNumber(++numMessages);
+
+		/* Add Big View Specific Configuration */
+		NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+
+		String[] events = new String[6];
+		events[0] = new String("This is first line....");
+		events[1] = new String("This is second line...");
+		events[2] = new String("This is third line...");
+		events[3] = new String("This is 4th line...");
+		events[4] = new String("This is 5th line...");
+		events[5] = new String("This is 6th line...");
+
+		// Sets a title for the Inbox style big view
+		inboxStyle.setBigContentTitle("Big Title Details:");
+
+		// Moves events into the big view
+		for (int i = 0; i < events.length; i++) {
+			inboxStyle.addLine(events[i]);
+		}
+
+		mBuilder.setStyle(inboxStyle);
+
+		/* Creates an explicit intent for an Activity in your app */
+		Intent resultIntent = new Intent(this, NotificationView.class);
+
+		TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+		stackBuilder.addParentStack(NotificationView.class);
+
+		/* Adds the Intent that starts the Activity to the top of the stack */
+		stackBuilder.addNextIntent(resultIntent);
+		PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,
+				PendingIntent.FLAG_UPDATE_CURRENT);
+		NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		mBuilder.setContentIntent(resultPendingIntent);
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+		/* notificationID allows you to update the notification later on. */
+		mNotificationManager.notify(notificationID, mBuilder.build());
+	}
+
 	private void showAll() {
 		btview.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
-//				Cursor res = db.getallData();
-//				StringBuffer sb = new StringBuffer();
-//				while (res.moveToNext()) {
-//					sb.append("ID   :" + res.getInt(0) + "\n");
-//					sb.append("NAME :" + res.getString(1) + "\n");
-//					sb.append("AGE  :" + res.getInt(2) + "\n\n");
-//					sb.append("EMAIL:" + res.getString(3) + "\n\n");
-//
-//				}
-//				showMessage("student", sb.toString());
-				ResHelper reshelp =  new ResHelper();
-				LinkedHashMap <String,String> vals= new LinkedHashMap <String,String>();
-				vals= reshelp.satjson1();
-				
-				System.out.println("satjson"+vals);
+				// Cursor res = db.getallData();
+				// StringBuffer sb = new StringBuffer();
+				// while (res.moveToNext()) {
+				// sb.append("ID   :" + res.getInt(0) + "\n");
+				// sb.append("NAME :" + res.getString(1) + "\n");
+				// sb.append("AGE  :" + res.getInt(2) + "\n\n");
+				// sb.append("EMAIL:" + res.getString(3) + "\n\n");
+				//
+				// }
+				// showMessage("student", sb.toString());
+				ResHelper reshelp = new ResHelper();
+				LinkedHashMap<String, String> vals = new LinkedHashMap<String, String>();
+				vals = reshelp.satjson1();
+
+				System.out.println("satjson" + vals);
 				ed0.setText(String.valueOf(vals.get("id")));
 				ed1.setText(vals.get("name"));
-		    	ed2.setText(String.valueOf(vals.get("age")));    		
-	    		edmail.setText(vals.get("mail"));
-				
+				ed2.setText(String.valueOf(vals.get("age")));
+				edmail.setText(vals.get("mail"));
 
 			}
 		});

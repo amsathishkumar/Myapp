@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="21" />
 
     <application
@@ -14,7 +14,7 @@
         android:label="@string/application_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.sat.info.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/application_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,8 +23,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.sat.info.SatActivity"
+            android:name=".SatActivity"
             android:label="@string/title_activity_sat" >
+        </activity>
+        <activity
+            android:name="com.sat.NotificationView"
+            android:label="Details of notification"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <activity
+            android:name=".NotificationView"
+            android:label="@string/title_activity_notification" >
         </activity>
     </application>
 
